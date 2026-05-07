@@ -1,0 +1,262 @@
+// DBML generated from Laravel migrations in backend-api
+// Path: /home/albert/projects/backend-api/database/migrations
+// Generated: 2026-05-07
+
+Table users {
+  id integer [pk, increment]
+  name varchar
+  email varchar [unique]
+  email_verified_at timestamp [null]
+  password varchar
+  remember_token varchar [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table password_reset_tokens {
+  email varchar [pk]
+  token varchar
+  created_at timestamp [null]
+}
+
+Table sessions {
+  id varchar [pk]
+  user_id integer [null] // indexed, fk -> users.id
+  ip_address varchar(45) [null]
+  user_agent text [null]
+  payload longtext
+  last_activity integer // indexed
+}
+
+Table branches {
+  id integer [pk, increment]
+  name varchar [unique]
+  code varchar [unique, null]
+  address text [null]
+  is_active boolean [default: true]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table brands {
+  id integer [pk, increment]
+  name varchar
+  description text [null]
+  img_url varchar [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table categories {
+  id integer [pk, increment]
+  name varchar
+  description text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table products {
+  id integer [pk, increment]
+  name varchar
+  description text [null]
+  cost_price decimal(10,2) [null]
+  unit_measure varchar(20) [default: "PZA"]
+  sku varchar [unique]
+  category_id integer [null]
+  brand_id integer [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table branch_product {
+  id integer [pk, increment]
+  branch_id integer
+  product_id integer
+  price decimal(10,2)
+  stock_quantity integer [default: 0]
+  min_stock integer [default: 5]
+  is_available boolean [default: true]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+  Note: "Unique(branch_id, product_id)"
+}
+
+Table devices {
+  id integer [pk, increment]
+  branch_id integer
+  name varchar
+  identifier varchar [unique]
+  secret_hash varchar
+  is_active boolean [default: true]
+  last_login_at timestamp [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table cash_sessions {
+  id integer [pk, increment]
+  branch_id integer
+  device_id integer // fk -> devices.id
+  opened_at timestamp // useCurrent
+  closed_at timestamp [null]
+  opening_balance decimal(10,2)
+  closing_balance decimal(10,2) [null]
+  status varchar [default: "open"]
+  notes text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table cash_movements {
+  id integer [pk, increment]
+  cash_session_id integer
+  branch_id integer
+  type varchar
+  category varchar
+  amount decimal(10,2)
+  source varchar [default: "manual"]
+  reference_id bigint [null]
+  notes text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+  Note: "Indexes: (branch_id, type), (source, reference_id)"
+}
+
+Table customers {
+  id integer [pk, increment]
+  name varchar
+  email varchar [unique, null]
+  phone varchar [null]
+  address text [null]
+  tax_id varchar [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table suppliers {
+  id integer [pk, increment]
+  name varchar
+  contact_person varchar [null]
+  email varchar [unique, null]
+  phone varchar [null]
+  address text [null]
+  credit_days integer [default: 0]
+  bank_info text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table sales {
+  id integer [pk, increment]
+  sale_date timestamp // useCurrent
+  customer_id integer [null]
+  cash_session_id integer
+  branch_id integer
+  tax_amount decimal(10,2) [default: 0]
+  subtotal decimal(10,2)
+  discount_amount decimal(10,2) [default: 0]
+  total_amount decimal(10,2)
+  payment_method varchar
+  status varchar [default: "completed"]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table sale_details {
+  id integer [pk, increment]
+  sale_id integer
+  product_id integer
+  quantity integer
+  unit_price decimal(10,2)
+  tax_amount decimal(10,2)
+  subtotal decimal(10,2)
+  total decimal(10,2)
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table inventory_movements {
+  id integer [pk, increment]
+  product_id integer
+  branch_id integer
+  type varchar // enum: 'in','out','adjustment'
+  quantity integer
+  source varchar [default: "manual"]
+  reference_id bigint [null]
+  notes text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table saved_carts {
+  id integer [pk, increment]
+  name varchar
+  customer_id integer [null]
+  cash_session_id integer [null]
+  branch_id integer
+  discount_amount decimal(10,2) [default: 0]
+  status varchar [default: "saved"]
+  notes text [null]
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table saved_cart_items {
+  id integer [pk, increment]
+  saved_cart_id integer
+  product_id integer
+  quantity integer
+  unit_price decimal(10,2)
+  tax_amount decimal(10,2) [default: 0]
+  subtotal decimal(10,2)
+  total decimal(10,2)
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+Table personal_access_tokens {
+  id integer [pk, increment]
+  tokenable_type varchar
+  tokenable_id integer
+  name text
+  token varchar(64) [unique]
+  abilities text [null]
+  last_used_at timestamp [null]
+  expires_at timestamp [null] // indexed in migrations
+  created_at timestamp [null]
+  updated_at timestamp [null]
+}
+
+// Foreign key references (for clarity)
+Ref: products.category_id > categories.id
+Ref: products.brand_id > brands.id
+
+Ref: branch_product.branch_id > branches.id
+Ref: branch_product.product_id > products.id
+
+Ref: devices.branch_id > branches.id
+
+Ref: cash_sessions.branch_id > branches.id
+Ref: cash_sessions.device_id > devices.id
+
+Ref: cash_movements.cash_session_id > cash_sessions.id
+Ref: cash_movements.branch_id > branches.id
+
+Ref: sales.customer_id > customers.id
+Ref: sales.cash_session_id > cash_sessions.id
+Ref: sales.branch_id > branches.id
+
+Ref: sale_details.sale_id > sales.id
+Ref: sale_details.product_id > products.id
+
+Ref: inventory_movements.product_id > products.id
+Ref: inventory_movements.branch_id > branches.id
+
+Ref: saved_carts.customer_id > customers.id
+Ref: saved_carts.cash_session_id > cash_sessions.id
+Ref: saved_carts.branch_id > branches.id
+
+Ref: saved_cart_items.saved_cart_id > saved_carts.id
+Ref: saved_cart_items.product_id > products.id
+
+Ref: personal_access_tokens.tokenable_id > /* polymorphic tokenable */
