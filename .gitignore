@@ -1,0 +1,120 @@
+# .gitignore para un proyecto FastAPI (Python)
+# Incluye reglas comunes: entornos virtuales, caches, IDEs, archivos de entorno y artefactos
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+env.bak/
+.venv/
+venv.bak/
+
+# pipenv / poetry virtual env location
+\.venv/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Type checkers
+.mypy_cache/
+.pyre/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# IDEs and editors
+.idea/
+.vscode/
+# JetBrains project files
+*.iml
+
+# Editors
+*.swp
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# dotenv / environment variables
+.env
+.env.*
+local_settings.py
+
+# Database files (local dev)
+*.sqlite3
+*.db
+*.db-journal
+
+# Logs
+*.log
+
+# FastAPI / ASGI / server logs
+gunicorn.error.log
+gunicorn.access.log
+
+# Docker
+docker-compose.override.yml
+
+# Node (if the project has a frontend)
+node_modules/
+
+# Jupyter
+*.ipynb_checkpoints
+
+# Build / packaging artifacts
+dist/
+build/
+eggs/
+*.egg-info/
+
+# Secret files / credentials
+credentials.json
+secrets/
+
+# Misc
+__pypackages__/
